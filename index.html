@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Card Rubric</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            overflow-x: auto; /* Enable horizontal scrolling */
+            overflow-y: auto; /* Enable vertical scrolling */
+        }
+        table {
+            width: auto; /* Adjusted from 100% to auto */
+            border-collapse: collapse;
+            table-layout: fixed; /* Ensures uniform column width */
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            white-space: nowrap; /* Prevent line breaks */
+            overflow: hidden; /* Hide content overflow */
+            text-overflow: ellipsis; /* Show ellipsis for overflow text */
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+        .grades-dropdown,
+        .comment-box {
+            width: 100px;
+            border-radius: 5px; /* Rounded corners */
+            padding: 5px; /* Add padding */
+        }
+        .learning-skills-dropdown {
+            width: 120px;
+            border-radius: 5px; /* Rounded corners */
+            padding: 5px; /* Add padding */
+        }
+        .preview-btn {
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        .preview-btn:hover {
+            background-color: #45a049;
+        }
+        .preview-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow-x: auto; /* Enable horizontal scrolling */
+        }
+        .print-btn {
+            cursor: pointer;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .print-btn:hover {
+            background-color: #005F6B;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Report Card Rubric</h2>
+
+<h3>Academic Subjects</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Student Name</th>
+            <th>French Listening</th>
+            <th>French Reading</th>
+            <th>French Writing</th>
+            <th>French Speaking</th>
+            <th>Math</th>
+            <th>English</th>
+            <th>Science</th>
+            <th>Social Studies</th>
+            <th>Drama</th>
+            <th>Comments</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody id="student-grades">
+        <!-- JavaScript will populate this area -->
+    </tbody>
+</table>
+
+<h3>Learning Skills</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Student Name</th>
+            <th>Initiative</th>
+            <th>Responsibility</th>
+            <th>Independent Work</th>
+            <th>Collaboration</th>
+            <th>Self-Regulation</th>
+            <th>Organization</th>
+            <th>Comments</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody id="learning-skills">
+        <!-- JavaScript will populate this area -->
+    </tbody>
+</table>
+
+<script>
+    var studentNames = [
+        "Maddie",
+        "Isaac",
+        "Ellie",
+        "Lucy",
+        "Nicholas",
+        "Beatrix",
+        "Nathaniel",
+        "Sophie",
+        "Harrison",
+        "Teodoro",
+        "Bennett",
+        "Madeleine",
+        "Meave",
+        "James H",
+        "Matteo J-S",
+        "Clara",
+        "Oliver",
+        "Bruce",
+        "Owen",
+        "Nico",
+        "Aaron",
+        "Audrey",
+        "James O",
+        "Eve",
+        "Matteo P",
+        "Avery",
+        "Asher",
+        "Hannah",
+        "Maya",
+        "Matthew",
+        "Ally",
+        "Scarlett"
+    ];
+
+    function createGradeInputs() {
+        var html = '';
+        var subjects = ["French Listening", "French Reading", "French Writing", "French Speaking", "Math", "English", "Science", "Social Studies", "Drama"];
+        var learningSkills = ["Initiative", "Responsibility", "Independent Work", "Collaboration", "Self-Regulation", "Organization"];
+        
+        for (var i = 0; i < studentNames.length; i++) {
+            html += '<tr>';
+            html += '<td>' + studentNames[i] + '</td>';
+            
+            subjects.forEach(function(subject) {
+                html += '<td>';
+                html += '<select class="grades-dropdown" id="' + studentNames[i] + '-' + subject.toLowerCase().replace(/\s/g, '-') + '">';
+                html += '<option value="A">A</option>';
+                html += '<option value="A+">A+</option>';
+                html += '<option value="A-">A-</option>';
+                html += '<option value="B">B</option>';
+                html += '<option value="B+">B+</option>';
+                html += '<option value="B-">B-</option>';
+                html += '<option value="C">C</option>';
+                html += '<option value="C+">C+</option>';
+                html += '<option value="C-">C-</option>';
+                html += '<option value="D">D</option>';
+                html += '<option value="D+">D+</option>';
+                html += '<option value="D-">D-</option>';
+                html += '<option value="I">I</option>';
+                html += '<option value="R">R</option>';
+                html += '</select>';
+                html += '<textarea class="comment-box" id="' + studentNames[i] + '-' + subject.toLowerCase().replace(/\s/g, '-') + '-comment" placeholder="Enter comment..."></textarea>';
+                html += '</td>';
+            });
+            
+            html += '<td><button class="preview-btn" onclick="previewGrades(\'' + studentNames[i] + '\', \'academic\')">Preview</button></td>';
+            html += '</tr>';
+        }
+        document.getElementById('student-grades').innerHTML = html;
+        
+        // Populate learning skills table
+        var learningSkillsHtml = '';
+        for (var j = 0; j < studentNames.length; j++) {
+            learningSkillsHtml += '<tr>';
+            learningSkillsHtml += '<td>' + studentNames[j] + '</td>';
+            
+            learningSkills.forEach(function(skill) {
+                learningSkillsHtml += '<td>';
+                learningSkillsHtml += '<select class="learning-skills-dropdown" id="' + studentNames[j] + '-' + skill.toLowerCase() + '">';
+                learningSkillsHtml += '<option value="N">N</option>';
+                learningSkillsHtml += '<option value="S">S</option>';
+                learningSkillsHtml += '<option value="G">G</option>';
+                learningSkillsHtml += '<option value="E">E</option>';
+                learningSkillsHtml += '</select>';
+                learningSkillsHtml += '<textarea class="comment-box" id="' + studentNames[j] + '-' + skill.toLowerCase() + '-comment" placeholder="Enter comment..."></textarea>';
+                learningSkillsHtml += '</td>';
+            });
+            
+            learningSkillsHtml += '<td><button class="preview-btn" onclick="previewGrades(\'' + studentNames[j] + '\', \'learning\')">Preview</button></td>';
+            learningSkillsHtml += '</tr>';
+        }
+        document.getElementById('learning-skills').innerHTML = learningSkillsHtml;
+    }
+
+    function previewGrades(studentName, type) {
+        var gradesPage = window.open('', '_blank');
+        
+        gradesPage.document.write('<!DOCTYPE html>');
+        gradesPage.document.write('<html lang="en">');
+        gradesPage.document.write('<head>');
+        gradesPage.document.write('<meta charset="UTF-8">');
+        gradesPage.document.write('<meta name="viewport" content="width=device-width, initial-scale=1.0">');
+        gradesPage.document.write('<title>Report Card Preview</title>');
+        gradesPage.document.write('<style>');
+        gradesPage.document.write('body { font-family: Arial, sans-serif; margin: 20px; }');
+        gradesPage.document.write('table { width: auto; border-collapse: collapse; table-layout: fixed; }');
+        gradesPage.document.write('th, td { border: 1px solid #ddd; padding: 8px; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }');
+        gradesPage.document.write('th { background-color: #f2f2f2; }');
+        gradesPage.document.write('.preview-container { max-width: 800px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); overflow-x: auto; }');
+        gradesPage.document.write('.print-btn { cursor: pointer; background-color: #008CBA; color: white; border: none; padding: 5px 10px; border-radius: 5px; margin-top: 20px; }');
+        gradesPage.document.write('.print-btn:hover { background-color: #005F6B; }');
+        gradesPage.document.write('.grades-dropdown, .comment-box, .learning-skills-dropdown { border-radius: 5px; padding: 5px; }'); // Rounded corners and padding
+        gradesPage.document.write('</style>');
+        gradesPage.document.write('</head>');
+        gradesPage.document.write('<body>');
+        gradesPage.document.write('<div class="preview-container">');
+        gradesPage.document.write('<h2>' + studentName + '\'s Report Card</h2>');
+        
+        if (type === 'academic') {
+            gradesPage.document.write('<h3>Academic Subjects</h3>');
+            gradesPage.document.write('<table>');
+            gradesPage.document.write('<thead><tr><th>Subject</th><th>Grade</th><th>Comments</th></tr></thead><tbody>');
+            
+            var subjects = ["French Listening", "French Reading", "French Writing", "French Speaking", "Math", "English", "Science", "Social Studies", "Drama"];
+            subjects.forEach(function(subject) {
+                var grade = document.getElementById(studentName + '-' + subject.toLowerCase().replace(/\s/g, '-')).value;
+                var comment = document.getElementById(studentName + '-' + subject.toLowerCase().replace(/\s/g, '-') + '-comment').value;
+                gradesPage.document.write('<tr><td>' + subject + '</td><td>' + grade + '</td><td>' + comment + '</td></tr>');
+            });
+            
+            gradesPage.document.write('</tbody></table>');
+        } else {
+            gradesPage.document.write('<h3>Learning Skills</h3>');
+            gradesPage.document.write('<table>');
+            gradesPage.document.write('<thead><tr><th>Skill</th><th>Grade</th><th>Comments</th></tr></thead><tbody>');
+            
+            var learningSkills = ["Initiative", "Responsibility", "Independent Work", "Collaboration", "Self-Regulation", "Organization"];
+            learningSkills.forEach(function(skill) {
+                var grade = document.getElementById(studentName + '-' + skill.toLowerCase()).value;
+                var comment = document.getElementById(studentName + '-' + skill.toLowerCase() + '-comment').value;
+                gradesPage.document.write('<tr><td>' + skill + '</td><td>' + grade + '</td><td>' + comment + '</td></tr>');
+            });
+            
+            gradesPage.document.write('</tbody></table>');
+        }
+        
+        gradesPage.document.write('</div>');
+        gradesPage.document.write('<button class="print-btn" onclick="window.print()">Print Report Card</button>');
+        gradesPage.document.write('</body>');
+        gradesPage.document.write('</html>');
+    }
+
+    createGradeInputs();
+</script>
+
+</body>
+</html>
