@@ -29,17 +29,18 @@
         }
         .grades-dropdown {
             width: 70px;
+            border-radius: 5px;
         }
         .learning-skills-dropdown {
             width: 100px;
+            border-radius: 5px;
         }
         .comment-box {
             width: 200px;
             height: 80px;
-            resize: vertical; /* Allow vertical resizing */
             border-radius: 5px;
-            padding: 5px;
-            overflow-y: auto; /* Enable vertical scrollbar */
+            resize: none;
+            overflow-y: auto;
         }
         .preview-btn {
             cursor: pointer;
@@ -59,7 +60,8 @@
             border: 1px solid #ddd;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            overflow-x: auto; /* Enable horizontal scrollbar */
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
         .print-btn {
             cursor: pointer;
@@ -166,29 +168,28 @@
             html += '<td>' + studentNames[i] + '</td>';
             
             subjects.forEach(function(subject) {
-                var grade = localStorage.getItem(studentNames[i] + '-' + subject.toLowerCase().replace(/\s/g, '-'));
-                var comment = localStorage.getItem(studentNames[i] + '-' + subject.toLowerCase().replace(/\s/g, '-') + '-comment');
                 html += '<td>';
                 html += '<select class="grades-dropdown" id="' + studentNames[i] + '-' + subject.toLowerCase().replace(/\s/g, '-') + '" onchange="saveData(this.id)">';
-                html += '<option value="A" ' + (grade === 'A' ? 'selected' : '') + '>A</option>';
-                html += '<option value="A+" ' + (grade === 'A+' ? 'selected' : '') + '>A+</option>';
-                html += '<option value="A-" ' + (grade === 'A-' ? 'selected' : '') + '>A-</option>';
-                html += '<option value="B" ' + (grade === 'B' ? 'selected' : '') + '>B</option>';
-                html += '<option value="B+" ' + (grade === 'B+' ? 'selected' : '') + '>B+</option>';
-                html += '<option value="B-" ' + (grade === 'B-' ? 'selected' : '') + '>B-</option>';
-                html += '<option value="C" ' + (grade === 'C' ? 'selected' : '') + '>C</option>';
-                html += '<option value="C+" ' + (grade === 'C+' ? 'selected' : '') + '>C+</option>';
-                html += '<option value="C-" ' + (grade === 'C-' ? 'selected' : '') + '>C-</option>';
-                html += '<option value="D" ' + (grade === 'D' ? 'selected' : '') + '>D</option>';
-                html += '<option value="D+" ' + (grade === 'D+' ? 'selected' : '') + '>D+</option>';
-                html += '<option value="D-" ' + (grade === 'D-' ? 'selected' : '') + '>D-</option>';
-                html += '<option value="I" ' + (grade === 'I' ? 'selected' : '') + '>I</option>';
-                html += '<option value="R" ' + (grade === 'R' ? 'selected' : '') + '>R</option>';
+                html += '<option value="A">A</option>';
+                html += '<option value="A+">A+</option>';
+                html += '<option value="A-">A-</option>';
+                html += '<option value="B">B</option>';
+                html += '<option value="B+">B+</option>';
+                html += '<option value="B-">B-</option>';
+                html += '<option value="C">C</option>';
+                html += '<option value="C+">C+</option>';
+                html += '<option value="C-">C-</option>';
+                html += '<option value="D">D</option>';
+                html += '<option value="D+">D+</option>';
+                html += '<option value="D-">D-</option>';
+                html += '<option value="I">I</option>';
+                html += '<option value="R">R</option>';
                 html += '</select>';
-                html += '<textarea class="comment-box" id="' + studentNames[i] + '-' + subject.toLowerCase().replace(/\s/g, '-') + '-comment" placeholder="Enter comment..." oninput="saveData(this.id)">' + (comment ? comment : '') + '</textarea>';
+                html += '<textarea class="comment-box" id="' + studentNames[i] + '-' + subject.toLowerCase().replace(/\s/g, '-') + '-comment" placeholder="Enter comment..." oninput="saveData(this.id)"></textarea>';
                 html += '</td>';
             });
             
+            html += '<td><button class="preview-btn" onclick="previewGrades(\'' + studentNames[i] + '\')">Preview</button></td>';
             html += '</tr>';
         }
         document.getElementById('student-grades').innerHTML = html;
@@ -200,27 +201,29 @@
             learningSkillsHtml += '<td>' + studentNames[j] + '</td>';
             
             learningSkills.forEach(function(skill) {
-                var grade = localStorage.getItem(studentNames[j] + '-' + skill.toLowerCase());
-                var comment = localStorage.getItem(studentNames[j] + '-' + skill.toLowerCase() + '-comment');
                 learningSkillsHtml += '<td>';
                 learningSkillsHtml += '<select class="learning-skills-dropdown" id="' + studentNames[j] + '-' + skill.toLowerCase() + '" onchange="saveData(this.id)">';
-                learningSkillsHtml += '<option value="N" ' + (grade === 'N' ? 'selected' : '') + '>N</option>';
-                learningSkillsHtml += '<option value="S" ' + (grade === 'S' ? 'selected' : '') + '>S</option>';
-                learningSkillsHtml += '<option value="G" ' + (grade === 'G' ? 'selected' : '') + '>G</option>';
-                learningSkillsHtml += '<option value="E" ' + (grade === 'E' ? 'selected' : '') + '>E</option>';
+                learningSkillsHtml += '<option value="N">N</option>';
+                learningSkillsHtml += '<option value="S">S</option>';
+                learningSkillsHtml += '<option value="G">G</option>';
+                learningSkillsHtml += '<option value="E">E</option>';
                 learningSkillsHtml += '</select>';
-                learningSkillsHtml += '<textarea class="comment-box" id="' + studentNames[j] + '-' + skill.toLowerCase() + '-comment" placeholder="Enter comment..." oninput="saveData(this.id)">' + (comment ? comment : '') + '</textarea>';
+                learningSkillsHtml += '<textarea class="comment-box" id="' + studentNames[j] + '-' + skill.toLowerCase() + '-comment" placeholder="Enter comment..." oninput="saveData(this.id)"></textarea>';
                 learningSkillsHtml += '</td>';
             });
             
+            learningSkillsHtml += '<td><button class="preview-btn" onclick="previewGrades(\'' + studentNames[j] + '\')">Preview</button></td>';
             learningSkillsHtml += '</tr>';
         }
         document.getElementById('learning-skills').innerHTML = learningSkillsHtml;
+        
+        // Retrieve data from local storage
+        retrieveData();
     }
 
     function previewGrades(studentName) {
+        // Function to preview grades
         var gradesPage = window.open('', '_blank');
-        
         gradesPage.document.write('<!DOCTYPE html>');
         gradesPage.document.write('<html lang="en">');
         gradesPage.document.write('<head>');
@@ -232,16 +235,16 @@
         gradesPage.document.write('table { width: 100%; border-collapse: collapse; }');
         gradesPage.document.write('th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }');
         gradesPage.document.write('th { background-color: #f2f2f2; }');
-        gradesPage.document.write('.preview-container { max-width: 800px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }');
+        gradesPage.document.write('.preview-container { max-width: 800px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); white-space: pre-wrap; word-wrap: break-word; }');
         gradesPage.document.write('.print-btn { cursor: pointer; background-color: #008CBA; color: white; border: none; padding: 5px 10px; border-radius: 5px; margin-top: 20px; }');
         gradesPage.document.write('.print-btn:hover { background-color: #005F6B; }');
-        gradesPage.document.write('.comment-box { width: 100%; height: auto; resize: none; border-radius: 5px; padding: 5px; overflow-y: auto; }');
         gradesPage.document.write('</style>');
         gradesPage.document.write('</head>');
         gradesPage.document.write('<body>');
         gradesPage.document.write('<div class="preview-container">');
         gradesPage.document.write('<h2>' + studentName + '\'s Report Card</h2>');
         
+        // Preview academic subjects
         gradesPage.document.write('<h3>Academic Subjects</h3>');
         gradesPage.document.write('<table>');
         gradesPage.document.write('<thead><tr><th>Subject</th><th>Grade</th><th>Comments</th></tr></thead><tbody>');
@@ -255,6 +258,7 @@
         
         gradesPage.document.write('</tbody></table>');
         
+        // Preview learning skills
         gradesPage.document.write('<h3>Learning Skills</h3>');
         gradesPage.document.write('<table>');
         gradesPage.document.write('<thead><tr><th>Skill</th><th>Grade</th><th>Comments</th></tr></thead><tbody>');
@@ -279,6 +283,19 @@
         localStorage.setItem(id, element.value);
     }
 
+    function retrieveData() {
+        // Function to retrieve data from local storage
+        var elements = document.querySelectorAll('select, textarea');
+        elements.forEach(function(element) {
+            var id = element.id;
+            var value = localStorage.getItem(id);
+            if (value !== null) {
+                element.value = value;
+            }
+        });
+    }
+
+    // Create grade inputs on page load
     createGradeInputs();
 </script>
 
