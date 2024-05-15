@@ -1,29 +1,28 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Report Card BETA</title>
+    <title>Report Card Rubric</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
-            overflow-x: auto; /* Enable horizontal scrolling */
-            overflow-y: auto; /* Enable vertical scrolling */
+            overflow-x: auto;
+            overflow-y: auto;
         }
         table {
-            width: auto; /* Adjusted from 100% to auto */
+            width: auto;
             border-collapse: collapse;
-            table-layout: fixed; /* Ensures uniform column width */
+            table-layout: fixed;
         }
         th, td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
-            white-space: nowrap; /* Prevent line breaks */
-            overflow: hidden; /* Hide content overflow */
-            text-overflow: ellipsis; /* Show ellipsis for overflow text */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         th {
             background-color: #f2f2f2;
@@ -37,13 +36,15 @@
         .grades-dropdown,
         .comment-box {
             width: 100px;
-            border-radius: 5px; /* Rounded corners */
-            padding: 5px; /* Add padding */
+            border-radius: 5px;
+            padding: 5px;
+            white-space: normal;
+            overflow: auto;
         }
         .learning-skills-dropdown {
             width: 120px;
-            border-radius: 5px; /* Rounded corners */
-            padding: 5px; /* Add padding */
+            border-radius: 5px;
+            padding: 5px;
         }
         .preview-btn {
             cursor: pointer;
@@ -63,7 +64,7 @@
             border: 1px solid #ddd;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            overflow-x: auto; /* Enable horizontal scrolling */
+            overflow-x: auto;
         }
         .print-btn {
             cursor: pointer;
@@ -172,24 +173,26 @@
             html += '<td>' + studentNames[i] + '</td>';
             
             subjects.forEach(function(subject) {
+                var grade = localStorage.getItem(studentNames[i] + '-' + subject.toLowerCase().replace(/\s/g, '-')) || 'A';
+                var comment = localStorage.getItem(studentNames[i] + '-' + subject.toLowerCase().replace(/\s/g, '-') + '-comment') || '';
                 html += '<td>';
                 html += '<select class="grades-dropdown" id="' + studentNames[i] + '-' + subject.toLowerCase().replace(/\s/g, '-') + '">';
-                html += '<option value="A">A</option>';
-                html += '<option value="A+">A+</option>';
-                html += '<option value="A-">A-</option>';
-                html += '<option value="B">B</option>';
-                html += '<option value="B+">B+</option>';
-                html += '<option value="B-">B-</option>';
-                html += '<option value="C">C</option>';
-                html += '<option value="C+">C+</option>';
-                html += '<option value="C-">C-</option>';
-                html += '<option value="D">D</option>';
-                html += '<option value="D+">D+</option>';
-                html += '<option value="D-">D-</option>';
-                html += '<option value="I">I</option>';
-                html += '<option value="R">R</option>';
+                html += '<option value="A" ' + (grade === 'A' ? 'selected' : '') + '>A</option>';
+                html += '<option value="A+" ' + (grade === 'A+' ? 'selected' : '') + '>A+</option>';
+                html += '<option value="A-" ' + (grade === 'A-' ? 'selected' : '') + '>A-</option>';
+                html += '<option value="B" ' + (grade === 'B' ? 'selected' : '') + '>B</option>';
+                html += '<option value="B+" ' + (grade === 'B+' ? 'selected' : '') + '>B+</option>';
+                html += '<option value="B-" ' + (grade === 'B-' ? 'selected' : '') + '>B-</option>';
+                html += '<option value="C" ' + (grade === 'C' ? 'selected' : '') + '>C</option>';
+                html += '<option value="C+" ' + (grade === 'C+' ? 'selected' : '') + '>C+</option>';
+                html += '<option value="C-" ' + (grade === 'C-' ? 'selected' : '') + '>C-</option>';
+                html += '<option value="D" ' + (grade === 'D' ? 'selected' : '') + '>D</option>';
+                html += '<option value="D+" ' + (grade === 'D+' ? 'selected' : '') + '>D+</option>';
+                html += '<option value="D-" ' + (grade === 'D-' ? 'selected' : '') + '>D-</option>';
+                html += '<option value="I" ' + (grade === 'I' ? 'selected' : '') + '>I</option>';
+                html += '<option value="R" ' + (grade === 'R' ? 'selected' : '') + '>R</option>';
                 html += '</select>';
-                html += '<textarea class="comment-box" id="' + studentNames[i] + '-' + subject.toLowerCase().replace(/\s/g, '-') + '-comment" placeholder="Enter comment..."></textarea>';
+                html += '<textarea class="comment-box" id="' + studentNames[i] + '-' + subject.toLowerCase().replace(/\s/g, '-') + '-comment" placeholder="Enter comment...">' + comment + '</textarea>';
                 html += '</td>';
             });
             
@@ -205,14 +208,16 @@
             learningSkillsHtml += '<td>' + studentNames[j] + '</td>';
             
             learningSkills.forEach(function(skill) {
+                var grade = localStorage.getItem(studentNames[j] + '-' + skill.toLowerCase()) || 'N';
+                var comment = localStorage.getItem(studentNames[j] + '-' + skill.toLowerCase() + '-comment') || '';
                 learningSkillsHtml += '<td>';
                 learningSkillsHtml += '<select class="learning-skills-dropdown" id="' + studentNames[j] + '-' + skill.toLowerCase() + '">';
-                learningSkillsHtml += '<option value="N">N</option>';
-                learningSkillsHtml += '<option value="S">S</option>';
-                learningSkillsHtml += '<option value="G">G</option>';
-                learningSkillsHtml += '<option value="E">E</option>';
+                learningSkillsHtml += '<option value="N" ' + (grade === 'N' ? 'selected' : '') + '>N</option>';
+                learningSkillsHtml += '<option value="S" ' + (grade === 'S' ? 'selected' : '') + '>S</option>';
+                learningSkillsHtml += '<option value="G" ' + (grade === 'G' ? 'selected' : '') + '>G</option>';
+                learningSkillsHtml += '<option value="E" ' + (grade === 'E' ? 'selected' : '') + '>E</option>';
                 learningSkillsHtml += '</select>';
-                learningSkillsHtml += '<textarea class="comment-box" id="' + studentNames[j] + '-' + skill.toLowerCase() + '-comment" placeholder="Enter comment..."></textarea>';
+                learningSkillsHtml += '<textarea class="comment-box" id="' + studentNames[j] + '-' + skill.toLowerCase() + '-comment" placeholder="Enter comment...">' + comment + '</textarea>';
                 learningSkillsHtml += '</td>';
             });
             
@@ -234,7 +239,7 @@
         gradesPage.document.write('<style>');
         gradesPage.document.write('body { font-family: Arial, sans-serif; margin: 20px; }');
         gradesPage.document.write('table { width: auto; border-collapse: collapse; table-layout: fixed; }');
-        gradesPage.document.write('th, td { border: 1px solid #ddd; padding: 8px; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }');
+        gradesPage.document.write('th, td { border: 1px solid #ddd; padding: 8px; text-align: left; white-space: normal; overflow: auto; }');
         gradesPage.document.write('th { background-color: #f2f2f2; }');
         gradesPage.document.write('.preview-container { max-width: 800px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); overflow-x: auto; }');
         gradesPage.document.write('.print-btn { cursor: pointer; background-color: #008CBA; color: white; border: none; padding: 5px 10px; border-radius: 5px; margin-top: 20px; }');
@@ -253,8 +258,8 @@
             
             var subjects = ["French Listening", "French Reading", "French Writing", "French Speaking", "Math", "English", "Science", "Social Studies", "Drama"];
             subjects.forEach(function(subject) {
-                var grade = document.getElementById(studentName + '-' + subject.toLowerCase().replace(/\s/g, '-')).value;
-                var comment = document.getElementById(studentName + '-' + subject.toLowerCase().replace(/\s/g, '-') + '-comment').value;
+                var grade = localStorage.getItem(studentName + '-' + subject.toLowerCase().replace(/\s/g, '-')) || 'A';
+                var comment = localStorage.getItem(studentName + '-' + subject.toLowerCase().replace(/\s/g, '-') + '-comment') || '';
                 gradesPage.document.write('<tr><td>' + subject + '</td><td>' + grade + '</td><td>' + comment + '</td></tr>');
             });
             
@@ -266,8 +271,8 @@
             
             var learningSkills = ["Initiative", "Responsibility", "Independent Work", "Collaboration", "Self-Regulation", "Organization"];
             learningSkills.forEach(function(skill) {
-                var grade = document.getElementById(studentName + '-' + skill.toLowerCase()).value;
-                var comment = document.getElementById(studentName + '-' + skill.toLowerCase() + '-comment').value;
+                var grade = localStorage.getItem(studentName + '-' + skill.toLowerCase()) || 'N';
+                var comment = localStorage.getItem(studentName + '-' + skill.toLowerCase() + '-comment') || '';
                 gradesPage.document.write('<tr><td>' + skill + '</td><td>' + grade + '</td><td>' + comment + '</td></tr>');
             });
             
@@ -278,6 +283,14 @@
         gradesPage.document.write('<button class="print-btn" onclick="window.print()">Print Report Card</button>');
         gradesPage.document.write('</body>');
         gradesPage.document.write('</html>');
+    }
+
+    // Save data to local storage when selecting grades or entering comments
+    function saveData(elementId) {
+        var element = document.getElementById(elementId);
+        if (element) {
+            localStorage.setItem(elementId, element.value);
+        }
     }
 
     createGradeInputs();
